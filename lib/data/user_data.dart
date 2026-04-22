@@ -1,0 +1,2 @@
+String savedEmail = "";
+String savedPassword = "";
