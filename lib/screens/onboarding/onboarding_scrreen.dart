@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../constants.dart';
-
 import '../../components/dot_indicators.dart';
 import '../auth/sign_in_screen.dart';
 import 'components/onboard_content.dart';
@@ -14,6 +13,7 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int currentPage = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +21,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(
           children: [
             const Spacer(flex: 2),
+
+            /// SLIDER ONBOARDING
             Expanded(
               flex: 14,
               child: PageView.builder(
@@ -37,7 +39,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
             ),
+
             const Spacer(),
+
+            /// DOT INDICATOR
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
@@ -45,11 +50,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 (index) => DotIndicator(isActive: index == currentPage),
               ),
             ),
+
             const Spacer(flex: 2),
+
+            /// BUTTON GET STARTED
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: ElevatedButton(
                 onPressed: () {
+                  /// PINDAH KE SIGN IN
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -60,6 +69,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Text("Get Started".toUpperCase()),
               ),
             ),
+
             const Spacer(),
           ],
         ),
@@ -68,22 +78,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-// Demo data for our Onboarding screen
+/// DEMO DATA ONBOARDING
 List<Map<String, dynamic>> demoData = [
   {
-    "illustration": "assets/Illustrations/Illustrations_1.svg",
+    /// ⚠️ PERBAIKAN DI SINI (huruf kecil biar aman)
+    "illustration": "assets/illustrations/Illustrations_1.svg",
     "title": "All your favorites",
     "text":
         "Order from the best local restaurants \nwith easy, on-demand delivery.",
   },
   {
-    "illustration": "assets/Illustrations/Illustrations_2.svg",
+    "illustration": "assets/illustrations/Illustrations_2.svg",
     "title": "Free delivery offers",
     "text":
         "Free delivery for new customers via Apple Pay\nand others payment methods.",
   },
   {
-    "illustration": "assets/Illustrations/Illustrations_3.svg",
+    "illustration": "assets/illustrations/Illustrations_3.svg",
     "title": "Choose your food",
     "text":
         "Easily find your type of food craving and\nyou’ll get delivery in wide range.",
