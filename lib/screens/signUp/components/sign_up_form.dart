@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../phoneLogin/phone_login_screen.dart';
-
 import '../../../constants.dart';
+import '../../../data/user_data.dart';
+import '../../auth/sign_in_screen.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -15,38 +15,49 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool _obscureText = true;
 
+  /// CONTROLLER
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          // Full Name Field
+          /// FULL NAME
           TextFormField(
+            controller: nameController,
             validator: requiredValidator.call,
-            onSaved: (value) {},
-            textInputAction: TextInputAction.next,
             decoration: const InputDecoration(hintText: "Full Name"),
           ),
           const SizedBox(height: defaultPadding),
 
-          // Email Field
+          /// EMAIL
           TextFormField(
+            controller: emailController,
             validator: emailValidator.call,
-            onSaved: (value) {},
-            textInputAction: TextInputAction.next,
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(hintText: "Email Address"),
           ),
           const SizedBox(height: defaultPadding),
 
-          // Password Field
+          /// PASSWORD (FIXED)
           TextFormField(
+            controller: passwordController,
             obscureText: _obscureText,
-            validator: passwordValidator.call,
-            textInputAction: TextInputAction.next,
-            onChanged: (value) {},
-            onSaved: (value) {},
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Password wajib diisi";
+              }
+              if (value.length < 3) {
+                return "Minimal 3 karakter";
+              }
+              return null;
+            },
             decoration: InputDecoration(
               hintText: "Password",
               suffixIcon: GestureDetector(
@@ -63,9 +74,19 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           const SizedBox(height: defaultPadding),
 
-          // Confirm Password Field
+          /// CONFIRM PASSWORD (FIXED)
           TextFormField(
+            controller: confirmPasswordController,
             obscureText: _obscureText,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Wajib diisi";
+              }
+              if (value != passwordController.text) {
+                return "Password tidak sama";
+              }
+              return null;
+            },
             decoration: InputDecoration(
               hintText: "Confirm Password",
               suffixIcon: GestureDetector(
@@ -81,15 +102,39 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
           const SizedBox(height: defaultPadding),
-          // Sign Up Button
+
+          /// BUTTON SIGN UP (FIXED + DEBUG)
           ElevatedButton(
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const PghoneLoginScreen(),
-                ),
-              );
+              print("TOMBOL DIKLIK");
+
+              /// DEBUG TAMBAHAN (BIAR KETAHUAN)
+              print("Nama: ${nameController.text}");
+              print("Email: ${emailController.text}");
+              print("Password: ${passwordController.text}");
+              print("Confirm: ${confirmPasswordController.text}");
+
+              if (_formKey.currentState!.validate()) {
+                print("VALID");
+
+                /// SIMPAN DATA
+                savedEmail = emailController.text;
+                savedPassword = passwordController.text;
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Akun berhasil dibuat")),
+                );
+
+                /// PINDAH KE LOGIN
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const SignInScreen(),
+                  ),
+                );
+              } else {
+                print("TIDAK VALID");
+              }
             },
             child: const Text("Sign Up"),
           ),
