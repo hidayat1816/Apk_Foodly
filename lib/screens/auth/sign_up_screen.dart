@@ -28,11 +28,12 @@ class SignUpScreen extends StatelessWidget {
                 text: "Enter your Name, Email and Password \nfor sign up.",
               ),
 
-              // Sign Up Form
+              /// FORM SIGN UP (LOGIKA ADA DI SINI)
               const SignUpForm(),
+
               const SizedBox(height: defaultPadding),
 
-              // Already have account
+              /// LINK KE SIGN IN
               Center(
                 child: Text.rich(
                   TextSpan(
@@ -57,7 +58,9 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 ),
               ),
+
               const SizedBox(height: defaultPadding),
+
               Center(
                 child: Text(
                   "By Signing up you agree to our Terms \nConditions & Privacy Policy.",
@@ -65,11 +68,12 @@ class SignUpScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
+
               const SizedBox(height: defaultPadding),
               kOrText,
               const SizedBox(height: defaultPadding),
 
-              // Facebook
+              /// FACEBOOK
               SocalButton(
                 press: () {},
                 text: "Connect with Facebook",
@@ -82,9 +86,10 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 ),
               ),
+
               const SizedBox(height: defaultPadding),
 
-              // Google
+              /// GOOGLE
               SocalButton(
                 press: () {},
                 text: "Connect with Google",
@@ -93,6 +98,7 @@ class SignUpScreen extends StatelessWidget {
                   'assets/icons/google.svg',
                 ),
               ),
+
               const SizedBox(height: defaultPadding),
             ],
           ),
