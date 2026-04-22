@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../findRestaurants/find_restaurants_screen.dart';
-
 import '../../../constants.dart';
+import '../../../data/user_data.dart';
 import '../forgot_password_screen.dart';
 
 class SignInForm extends StatefulWidget {
@@ -16,26 +16,35 @@ class _SignInFormState extends State<SignInForm> {
 
   bool _obscureText = true;
 
+  /// CONTROLLER
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
         children: [
+          /// EMAIL
           TextFormField(
+            controller: emailController,
             validator: emailValidator.call,
-            onSaved: (value) {},
-            textInputAction: TextInputAction.next,
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(hintText: "Email Address"),
           ),
           const SizedBox(height: defaultPadding),
 
-          // Password Field
+          /// PASSWORD
           TextFormField(
+            controller: passwordController,
             obscureText: _obscureText,
-            validator: passwordValidator.call,
-            onSaved: (value) {},
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Password wajib diisi";
+              }
+              return null;
+            },
             decoration: InputDecoration(
               hintText: "Password",
               suffixIcon: GestureDetector(
@@ -52,7 +61,7 @@ class _SignInFormState extends State<SignInForm> {
           ),
           const SizedBox(height: defaultPadding),
 
-          // Forget Password
+          /// FORGOT PASSWORD
           GestureDetector(
             onTap: () => Navigator.push(
               context,
@@ -70,20 +79,38 @@ class _SignInFormState extends State<SignInForm> {
           ),
           const SizedBox(height: defaultPadding),
 
-          // Sign In Button
+          /// BUTTON LOGIN
           ElevatedButton(
             onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
+              print("LOGIN DIKLIK");
 
-                // just for demo
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const FindRestaurantsScreen(),
-                  ),
-                  (_) => true,
-                );
+              if (_formKey.currentState!.validate()) {
+                print("VALID LOGIN");
+
+                /// CEK DATA
+                if (emailController.text == savedEmail &&
+                    passwordController.text == savedPassword) {
+
+                  print("LOGIN BERHASIL");
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const FindRestaurantsScreen(),
+                    ),
+                    (_) => false,
+                  );
+
+                } else {
+                  print("LOGIN GAGAL");
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Email atau Password salah"),
+                    ),
+                  );
+                }
               }
             },
             child: const Text("Sign in"),
