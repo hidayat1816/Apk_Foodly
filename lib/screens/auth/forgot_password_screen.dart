@@ -19,9 +19,10 @@ class ForgotPasswordScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             WelcomeText(
-                title: "Forgot password",
-                text:
-                    "Enter your email address and we will \nsend you a reset instructions."),
+              title: "Forgot password",
+              text:
+                  "Enter your email address and we will \nsend you a reset instructions.",
+            ),
             SizedBox(height: defaultPadding),
             ForgotPassForm(),
           ],
@@ -41,6 +42,8 @@ class ForgotPassForm extends StatefulWidget {
 class _ForgotPassFormState extends State<ForgotPassForm> {
   final _formKey = GlobalKey<FormState>();
 
+  final TextEditingController emailController = TextEditingController(); // 🔥 tambah ini
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -49,8 +52,8 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
         children: [
           // Email Field
           TextFormField(
+            controller: emailController, // 🔥 pakai controller
             validator: emailValidator.call,
-            onSaved: (value) {},
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(hintText: "Email Address"),
           ),
@@ -60,8 +63,17 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                // If all data are correct then save data to out variables
-                _formKey.currentState!.save();
+
+                /// 🔥 TAMBAHAN FEEDBACK
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Link reset dikirim ke ${emailController.text}",
+                    ),
+                  ),
+                );
+
+                /// PINDAH KE HALAMAN BERIKUT
                 Navigator.push(
                   context,
                   MaterialPageRoute(
