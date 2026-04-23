@@ -6,12 +6,16 @@ import '../../../data/user_data.dart';
 import '../forgot_password_screen.dart';
 
 class SignInForm extends StatefulWidget {
+<<<<<<< Updated upstream
   final Function(String email) onLoginSuccess;
 
   const SignInForm({
     super.key,
     required this.onLoginSuccess,
   });
+=======
+  const SignInForm({super.key, required Future<Null> Function(String email) onLoginSuccess});
+>>>>>>> Stashed changes
 
   @override
   State<SignInForm> createState() => _SignInFormState();
