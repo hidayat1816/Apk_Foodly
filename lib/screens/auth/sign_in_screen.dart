@@ -23,7 +23,10 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const SizedBox(),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: const Text("Sign In"),
       ),
       body: SingleChildScrollView(
@@ -67,8 +70,7 @@ class SignInScreen extends StatelessWidget {
                           ..onTap = () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SignUpScreen(),
+                                  builder: (context) => const SignUpScreen(),
                                 ),
                               ),
                       )
