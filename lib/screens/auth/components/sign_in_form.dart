@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+
 import '../../findRestaurants/find_restaurants_screen.dart';
 import '../../../constants.dart';
 import '../../../data/user_data.dart';
 import '../forgot_password_screen.dart';
 
 class SignInForm extends StatefulWidget {
-  const SignInForm({super.key});
+  final Function(String email) onLoginSuccess;
+
+  const SignInForm({
+    super.key,
+    required this.onLoginSuccess,
+  });
 
   @override
   State<SignInForm> createState() => _SignInFormState();
@@ -16,7 +22,6 @@ class _SignInFormState extends State<SignInForm> {
 
   bool _obscureText = true;
 
-  /// CONTROLLER
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -30,9 +35,9 @@ class _SignInFormState extends State<SignInForm> {
           TextFormField(
             controller: emailController,
             validator: emailValidator.call,
-            keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(hintText: "Email Address"),
           ),
+
           const SizedBox(height: defaultPadding),
 
           /// PASSWORD
@@ -47,64 +52,57 @@ class _SignInFormState extends State<SignInForm> {
             },
             decoration: InputDecoration(
               hintText: "Password",
-              suffixIcon: GestureDetector(
-                onTap: () {
+              suffixIcon: IconButton(
+                onPressed: () {
                   setState(() {
                     _obscureText = !_obscureText;
                   });
                 },
-                child: _obscureText
-                    ? const Icon(Icons.visibility_off, color: bodyTextColor)
-                    : const Icon(Icons.visibility, color: bodyTextColor),
+                icon: Icon(
+                  _obscureText
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                ),
               ),
             ),
           ),
+
           const SizedBox(height: defaultPadding),
 
           /// FORGOT PASSWORD
-          GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ForgotPasswordScreen(),
-              ),
-            ),
-            child: Text(
-              "Forget Password?",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const ForgotPasswordScreen(),
+                ),
+              );
+            },
+            child: const Text("Forget Password?"),
           ),
+
           const SizedBox(height: defaultPadding),
 
-          /// BUTTON LOGIN
+          /// LOGIN BUTTON
           ElevatedButton(
             onPressed: () {
-              print("LOGIN DIKLIK");
-
               if (_formKey.currentState!.validate()) {
-                print("VALID LOGIN");
-
-                /// CEK DATA
                 if (emailController.text == savedEmail &&
                     passwordController.text == savedPassword) {
+                  
+                  /// 🔥 AUTO LOGIN CALLBACK
+                  widget.onLoginSuccess(emailController.text);
 
-                  print("LOGIN BERHASIL");
-
+                  /// pindah halaman (opsional kalau tidak pakai callback)
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const FindRestaurantsScreen(),
+                      builder: (_) => const FindRestaurantsScreen(),
                     ),
                     (_) => false,
                   );
-
                 } else {
-                  print("LOGIN GAGAL");
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Email atau Password salah"),
