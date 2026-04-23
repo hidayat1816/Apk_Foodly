@@ -17,14 +17,14 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '
 
 android {
     namespace "com.example.foodly_ui"
-    compileSdk flutter.compileSdkVersion
+    compileSdk 34
 
     ndkVersion flutter.ndkVersion
 
     defaultConfig {
         applicationId "com.example.foodly_ui"
-        minSdk flutter.minSdkVersion
-        targetSdk flutter.targetSdkVersion
+        minSdkVersion flutter.minSdkVersion
+        targetSdk 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
