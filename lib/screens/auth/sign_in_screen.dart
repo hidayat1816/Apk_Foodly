@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/buttons/socal_button.dart';
 import '../../components/welcome_text.dart';
@@ -10,6 +11,13 @@ import 'components/sign_in_form.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
+
+  /// SIMPAN LOGIN (AUTO LOGIN)
+  Future<void> saveLogin(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("isLogin", true);
+    await prefs.setString("email", email);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +37,16 @@ class SignInScreen extends StatelessWidget {
                 text:
                     "Enter your Phone number or Email \naddress for sign in. Enjoy your food :)",
               ),
-              const SignInForm(),
+
+              /// FORM LOGIN
+              SignInForm(
+                onLoginSuccess: (String email) async {
+                  await saveLogin(email);
+
+                  Navigator.pushReplacementNamed(context, '/home');
+                },
+              ),
+
               const SizedBox(height: defaultPadding),
               kOrText,
               const SizedBox(height: defaultPadding * 1.5),
@@ -50,7 +67,8 @@ class SignInScreen extends StatelessWidget {
                           ..onTap = () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SignUpScreen(),
+                                  builder: (context) =>
+                                      const SignUpScreen(),
                                 ),
                               ),
                       )
@@ -58,32 +76,25 @@ class SignInScreen extends StatelessWidget {
                   ),
                 ),
               ),
+
               const SizedBox(height: defaultPadding),
 
-              // Facebook
               SocalButton(
                 press: () {},
                 text: "Connect with Facebook",
                 color: const Color(0xFF395998),
-                icon: SvgPicture.asset(
-                  'assets/icons/facebook.svg',
-                  colorFilter: const ColorFilter.mode(
-                    Color(0xFF395998),
-                    BlendMode.srcIn,
-                  ),
-                ),
+                icon: SvgPicture.asset('assets/icons/facebook.svg'),
               ),
+
               const SizedBox(height: defaultPadding),
 
-              // Google
               SocalButton(
                 press: () {},
                 text: "Connect with Google",
                 color: const Color(0xFF4285F4),
-                icon: SvgPicture.asset(
-                  'assets/icons/google.svg',
-                ),
+                icon: SvgPicture.asset('assets/icons/google.svg'),
               ),
+
               const SizedBox(height: defaultPadding),
             ],
           ),
