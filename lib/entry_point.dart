@@ -8,6 +8,9 @@ import 'screens/orderDetails/order_details_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/search/search_screen.dart';
 
+/// ✅ FIX IMPORT (PAKAI package)
+import 'package:foodly_ui/data/location_data.dart';
+
 class EntryPoint extends StatefulWidget {
   const EntryPoint({super.key});
 
@@ -16,10 +19,8 @@ class EntryPoint extends StatefulWidget {
 }
 
 class _EntryPointState extends State<EntryPoint> {
-  // Bydefault first one is selected
   int _selectedIndex = 0;
 
-  // List of nav items
   final List<Map<String, dynamic>> _navitems = [
     {"icon": "assets/icons/home.svg", "title": "Home"},
     {"icon": "assets/icons/search.svg", "title": "Search"},
@@ -27,7 +28,6 @@ class _EntryPointState extends State<EntryPoint> {
     {"icon": "assets/icons/profile.svg", "title": "Profile"},
   ];
 
-// Screens
   final List<Widget> _screens = [
     const HomeScreen(),
     const SearchScreen(),
@@ -37,10 +37,28 @@ class _EntryPointState extends State<EntryPoint> {
 
   @override
   Widget build(BuildContext context) {
-    /// If you set your home screen as first screen make sure call [SizeConfig().init(context)]
-
     return Scaffold(
+      /// 🔥 APPBAR TAMBAHAN (TAMPILKAN ALAMAT)
+      appBar: AppBar(
+        title: Row(
+          children: [
+            const Icon(Icons.location_on, size: 18),
+            const SizedBox(width: 5),
+            Expanded(
+              child: Text(
+                userAddress.isEmpty
+                    ? "Pilih lokasi"
+                    : userAddress,
+                style: const TextStyle(fontSize: 14),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+
       body: _screens[_selectedIndex],
+
       bottomNavigationBar: CupertinoTabBar(
         onTap: (value) {
           setState(() {
@@ -58,8 +76,9 @@ class _EntryPointState extends State<EntryPoint> {
               height: 30,
               width: 30,
               colorFilter: ColorFilter.mode(
-                  index == _selectedIndex ? primaryColor : bodyTextColor,
-                  BlendMode.srcIn),
+                index == _selectedIndex ? primaryColor : bodyTextColor,
+                BlendMode.srcIn,
+              ),
             ),
             label: _navitems[index]["title"],
           ),
