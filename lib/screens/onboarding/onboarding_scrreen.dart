@@ -81,7 +81,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 /// DEMO DATA ONBOARDING
 List<Map<String, dynamic>> demoData = [
   {
-    /// ⚠️ PERBAIKAN DI SINI (huruf kecil biar aman)
     "illustration": "assets/illustrations/Illustrations_1.svg",
     "title": "All your favorites",
     "text":
