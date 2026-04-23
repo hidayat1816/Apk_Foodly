@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foodly_ui/screens/onboarding/onboarding_scrreen.dart';
 import 'constants.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
