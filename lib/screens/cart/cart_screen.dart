@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../data/cart_data.dart';
+import 'package:provider/provider.dart';
+import '../../viewmodels/cart_viewmodel.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -9,13 +10,22 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  @override
+  void initState() {
+    super.initState();
 
-  /// HITUNG TOTAL
-  int getTotal() {
+    Future.microtask(() {
+      context.read<CartViewModel>().fetchCart();
+    });
+  }
+
+  int getTotal(List items) {
     int total = 0;
-    for (var item in cartItems) {
+
+    for (var item in items) {
       total += item["price"] as int;
     }
+
     return total;
   }
 
@@ -26,72 +36,72 @@ class _CartScreenState extends State<CartScreen> {
         title: const Text("Keranjang"),
       ),
 
-      body: cartItems.isEmpty
-          ? const Center(child: Text("Keranjang kosong"))
-          : Column(
-              children: [
+      body: Consumer<CartViewModel>(
+        builder: (context, vm, child) {
+          if (vm.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-                /// LIST ITEM
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: cartItems.length,
-                    itemBuilder: (context, index) {
-                      final item = cartItems[index];
+          if (vm.cartItems.isEmpty) {
+            return const Center(
+              child: Text("Keranjang kosong"),
+            );
+          }
 
-                      return ListTile(
-                        title: Text(item["name"]),
-                        subtitle: Text("Rp ${item["price"]}"),
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: vm.cartItems.length,
+                  itemBuilder: (context, index) {
+                    final item = vm.cartItems[index];
 
-                        /// 🔥 TOMBOL HAPUS
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            setState(() {
-                              cartItems.removeAt(index);
-                            });
+                    return ListTile(
+                      title: Text(item["name"]),
+                      subtitle: Text("Rp ${item["price"]}"),
+                      trailing: const Icon(
+                        Icons.shopping_cart,
+                        color: Colors.orange,
+                      ),
+                    );
+                  },
+                ),
+              ),
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Item dihapus"),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: Colors.grey),
                   ),
                 ),
-
-                /// 🔥 TOTAL HARGA
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(color: Colors.grey),
+                child: Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Total",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Total",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Text(
+                      "Rp ${getTotal(vm.cartItems)}",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        "Rp ${getTotal()}",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
