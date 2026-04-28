@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodly_ui/screens/onboarding/onboarding_scrreen.dart';
+import 'package:foodly_ui/viewmodels/cart_viewmodel.dart';
+import 'package:foodly_ui/viewmodels/product_viewmodel.dart';
 import 'constants.dart';
 import 'package:provider/provider.dart';
 import 'viewmodels/onboarding_viewmodel.dart';
@@ -10,6 +12,12 @@ void main() {
       providers: [
         ChangeNotifierProvider(
           create: (_) => OnboardingViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CartViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProductViewModel(),
         ),
       ],
       child: const MyApp(),
