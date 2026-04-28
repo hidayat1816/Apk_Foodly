@@ -3,6 +3,8 @@ import '../../constants.dart';
 import '../../components/dot_indicators.dart';
 import '../auth/sign_in_screen.dart';
 import 'components/onboard_content.dart';
+import 'package:provider/provider.dart';
+import '../../viewmodels/onboarding_viewmodel.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -15,6 +17,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int currentPage = 0;
 
   @override
+  void initState() {
+    super.initState();
+
+    /// 🔥 AMBIL DATA DARI API
+    Future.microtask(() =>
+        Provider.of<OnboardingViewModel>(context, listen: false)
+            .fetchTitle());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -25,18 +37,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             /// SLIDER ONBOARDING
             Expanded(
               flex: 14,
-              child: PageView.builder(
-                itemCount: demoData.length,
-                onPageChanged: (value) {
-                  setState(() {
-                    currentPage = value;
-                  });
+              child: Consumer<OnboardingViewModel>(
+                builder: (context, vm, child) {
+                  return PageView.builder(
+                    itemCount: demoData.length,
+                    onPageChanged: (value) {
+                      setState(() {
+                        currentPage = value;
+                      });
+                    },
+                    itemBuilder: (context, index) => OnboardContent(
+                      illustration: demoData[index]["illustration"],
+
+                      /// 🔥 TITLE INDEX 0 DIGANTI API
+                      title: index == 0
+                          ? (vm.isLoading
+                              ? "Loading..."
+                              : vm.title)
+                          : demoData[index]["title"],
+
+                      text: demoData[index]["text"],
+                    ),
+                  );
                 },
-                itemBuilder: (context, index) => OnboardContent(
-                  illustration: demoData[index]["illustration"],
-                  title: demoData[index]["title"],
-                  text: demoData[index]["text"],
-                ),
               ),
             ),
 
@@ -58,7 +81,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: ElevatedButton(
                 onPressed: () {
-                  /// PINDAH KE SIGN IN
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -82,7 +104,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 List<Map<String, dynamic>> demoData = [
   {
     "illustration": "assets/illustrations/Illustrations_1.svg",
-    "title": "All your favorites",
+    "title": "API", // nanti ketimpa API
     "text":
         "Order from the best local restaurants \nwith easy, on-demand delivery.",
   },
