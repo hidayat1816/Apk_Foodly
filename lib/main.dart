@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:foodly_ui/screens/onboarding/onboarding_scrreen.dart';
-import 'package:foodly_ui/viewmodels/cart_viewmodel.dart';
-import 'package:foodly_ui/viewmodels/product_viewmodel.dart';
-import 'constants.dart';
 import 'package:provider/provider.dart';
+
+import 'constants.dart';
+import 'screens/onboarding/onboarding_scrreen.dart';
+import 'screens/home/home_screen.dart';
+import 'viewmodels/cart_viewmodel.dart';
+import 'viewmodels/product_viewmodel.dart';
 import 'viewmodels/onboarding_viewmodel.dart';
 
 void main() {
@@ -32,9 +34,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'The Flutter Way - Foodly UI Kit',
+      title: 'Foodly UI',
+
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+        ),
+
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: primaryColor,
@@ -45,16 +51,25 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+
         textTheme: const TextTheme(
           bodyMedium: TextStyle(color: bodyTextColor),
           bodySmall: TextStyle(color: bodyTextColor),
         ),
+
         inputDecorationTheme: const InputDecorationTheme(
           contentPadding: EdgeInsets.all(defaultPadding),
           hintStyle: TextStyle(color: bodyTextColor),
         ),
       ),
+
+      /// HALAMAN AWAL
       home: const OnboardingScreen(),
+
+      /// 🔥 ROUTE TAMBAHAN
+      routes: {
+        "/home": (context) => const HomeScreen(),
+      },
     );
   }
 }
