@@ -8,7 +8,9 @@ import 'components/iteams.dart';
 import 'components/restaurrant_info.dart';
 
 class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key});
+  final Map<String, dynamic> product;
+
+  const DetailsScreen({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
