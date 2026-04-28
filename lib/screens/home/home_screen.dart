@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../components/cards/big/big_card_image_slide.dart';
 import '../../components/section_title.dart';
 import '../../constants.dart';
 import '../../screens/filter/filter_screen.dart';
@@ -16,19 +15,24 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const SizedBox(),
+        centerTitle: true,
         title: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Delivery to".toUpperCase(),
+              "DELIVERY TO",
               style: Theme.of(context)
                   .textTheme
-                  .bodySmall!
-                  .copyWith(color: primaryColor),
+                  .bodySmall
+                  ?.copyWith(color: primaryColor),
             ),
             const Text(
               "Pontianak",
-              style: TextStyle(color: Colors.black),
-            )
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
           ],
         ),
         actions: [
@@ -37,17 +41,19 @@ class HomeScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const FilterScreen(),
+                  builder: (_) => const FilterScreen(),
                 ),
               );
             },
             child: Text(
               "Filter",
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.bodyLarge ??
+                  const TextStyle(),
             ),
           ),
         ],
       ),
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -55,9 +61,11 @@ class HomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: defaultPadding),
 
-              /// 🔥 Banner sederhana (tanpa demo_data)
+              /// Banner Welcome
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: defaultPadding,
+                ),
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
@@ -75,25 +83,25 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: defaultPadding * 2),
 
-              /// 🔥 PRODUCT DARI API
+              /// Featured Product
               SectionTitle(
                 title: "Featured Products",
-                press: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const FeaturedScreen(),
-                  ),
-                ),
+                press: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const FeaturedScreen(),
+                    ),
+                  );
+                },
               ),
 
               const SizedBox(height: defaultPadding),
 
-              /// ✅ INI SUDAH API
               const MediumCardList(),
 
               const SizedBox(height: 20),
 
-              /// Banner tetap boleh (UI saja)
               const PromotionBanner(),
 
               const SizedBox(height: 20),
@@ -105,7 +113,6 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              /// 🔥 API lagi (boleh reuse)
               const MediumCardList(),
 
               const SizedBox(height: 30),
