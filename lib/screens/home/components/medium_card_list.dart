@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../../../components/cards/medium/restaurant_info_medium_card.dart';
-import '../../../components/scalton/medium_card_scalton.dart';
+import 'package:foodly_ui/screens/details/details_screen.dart';
+import 'package:provider/provider.dart';
+import '../../../viewmodels/product_viewmodel.dart';
 import '../../../constants.dart';
-import '../../../demo_data.dart';
-import '../../details/details_screen.dart';
 
 class MediumCardList extends StatefulWidget {
   const MediumCardList({super.key});
@@ -14,70 +12,70 @@ class MediumCardList extends StatefulWidget {
 }
 
 class _MediumCardListState extends State<MediumCardList> {
-  bool isLoading = true;
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
+
+    Future.microtask(() =>
+        Provider.of<ProductViewModel>(context, listen: false).fetchProducts());
   }
 
   @override
   Widget build(BuildContext context) {
-    // only for demo
-    List data = demoMediumCardData..shuffle();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: double.infinity,
-          height: 254,
-          child: isLoading
-              ? buildFeaturedPartnersLoadingIndicator()
-              : ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: data.length,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.only(
-                      left: defaultPadding,
-                      right: (data.length - 1) == index ? defaultPadding : 0,
+    return SizedBox(
+      height: 250,
+      child: Consumer<ProductViewModel>(
+        builder: (context, vm, child) {
+          if (vm.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: vm.products.length,
+            itemBuilder: (context, index) {
+              final item = vm.products[index];
+
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailsScreen(product: item),
                     ),
-                    child: RestaurantInfoMediumCard(
-                      image: data[index]['image'],
-                      name: data[index]['name'],
-                      location: data[index]['location'],
-                      delivertTime: 25,
-                      rating: 4.6,
-                      press: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DetailsScreen(),
-                          ),
-                        );
-                      },
-                    ),
+                  );
+                },
+                child: Container(
+                  width: 200,
+                  margin: const EdgeInsets.only(left: defaultPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          item["image"],
+                          height: 120,
+                          width: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        item["name"],
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      Text("⭐ ${item["star"]}"),
+                      const SizedBox(height: 4),
+                      Text("Rp ${item["price"]}"),
+                    ],
                   ),
                 ),
-        ),
-      ],
-    );
-  }
-
-  SingleChildScrollView buildFeaturedPartnersLoadingIndicator() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          2,
-          (index) => const Padding(
-            padding: EdgeInsets.only(left: defaultPadding),
-            child: MediumCardScalton(),
-          ),
-        ),
+              );
+            },
+          );
+        },
       ),
     );
   }
