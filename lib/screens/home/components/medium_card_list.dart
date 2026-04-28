@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:foodly_ui/screens/details/details_screen.dart';
 import 'package:provider/provider.dart';
-import '../../../viewmodels/product_viewmodel.dart';
+
 import '../../../constants.dart';
+import '../../../viewmodels/product_viewmodel.dart';
 
 class MediumCardList extends StatefulWidget {
   const MediumCardList({super.key});
@@ -16,8 +16,9 @@ class _MediumCardListState extends State<MediumCardList> {
   void initState() {
     super.initState();
 
-    Future.microtask(() =>
-        Provider.of<ProductViewModel>(context, listen: false).fetchProducts());
+    Future.microtask(() {
+      context.read<ProductViewModel>().fetchProducts();
+    });
   }
 
   @override
@@ -27,7 +28,15 @@ class _MediumCardListState extends State<MediumCardList> {
       child: Consumer<ProductViewModel>(
         builder: (context, vm, child) {
           if (vm.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (vm.products.isEmpty) {
+            return const Center(
+              child: Text("Data kosong"),
+            );
           }
 
           return ListView.builder(
@@ -36,41 +45,30 @@ class _MediumCardListState extends State<MediumCardList> {
             itemBuilder: (context, index) {
               final item = vm.products[index];
 
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailsScreen(product: item),
+              return Container(
+                width: 200,
+                margin: const EdgeInsets.only(left: defaultPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        item.image,
+                        height: 120,
+                        width: 200,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  );
-                },
-                child: Container(
-                  width: 200,
-                  margin: const EdgeInsets.only(left: defaultPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          item["image"],
-                          height: 120,
-                          width: 200,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        item["name"],
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text("⭐ ${item["star"]}"),
-                      const SizedBox(height: 4),
-                      Text("Rp ${item["price"]}"),
-                    ],
-                  ),
+                    const SizedBox(height: 8),
+                    Text(
+                      item.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text("⭐ ${item.star}"),
+                    Text("Rp ${item.price}"),
+                  ],
                 ),
               );
             },
