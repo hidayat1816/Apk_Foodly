@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../components/cards/big/big_card_image_slide.dart';
-import '../../components/cards/big/restaurant_info_big_card.dart';
 import '../../components/section_title.dart';
 import '../../constants.dart';
-import '../../demo_data.dart';
 import '../../screens/filter/filter_screen.dart';
-import '../details/details_screen.dart';
 import '../featured/featurred_screen.dart';
 import 'components/medium_card_list.dart';
 import 'components/promotion_banner.dart';
@@ -29,7 +26,7 @@ class HomeScreen extends StatelessWidget {
                   .copyWith(color: primaryColor),
             ),
             const Text(
-              "San Francisco",
+              "Pontianak",
               style: TextStyle(color: Colors.black),
             )
           ],
@@ -57,65 +54,61 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: defaultPadding),
+
+              /// 🔥 Banner sederhana (tanpa demo_data)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: BigCardImageSlide(images: demoBigImages),
-              ),
-              const SizedBox(height: defaultPadding * 2),
-              SectionTitle(
-                title: "Featured Partners",
-                press: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const FeaturedScreen(),
+                child: Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.grey.shade300,
                   ),
-                ),
-              ),
-              const SizedBox(height: defaultPadding),
-              const MediumCardList(),
-              const SizedBox(height: 20),
-              // Banner
-              const PromotionBanner(),
-              const SizedBox(height: 20),
-              SectionTitle(
-                title: "Best Pick",
-                press: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const FeaturedScreen(),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const MediumCardList(),
-              const SizedBox(height: 20),
-              SectionTitle(title: "All Restaurants", press: () {}),
-              const SizedBox(height: 16),
-
-              // Demo list of Big Cards
-              ...List.generate(
-                // For demo we use 4 items
-                3,
-                (index) => Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      defaultPadding, 0, defaultPadding, defaultPadding),
-                  child: RestaurantInfoBigCard(
-                    // Images are List<String>
-                    images: demoBigImages..shuffle(),
-                    name: "McDonald's",
-                    rating: 4.3,
-                    numOfRating: 200,
-                    deliveryTime: 25,
-                    foodType: const ["Chinese", "American", "Deshi food"],
-                    press: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DetailsScreen(),
-                      ),
+                  child: const Center(
+                    child: Text(
+                      "Welcome to Foodly 🍔",
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                 ),
-              )
+              ),
+
+              const SizedBox(height: defaultPadding * 2),
+
+              /// 🔥 PRODUCT DARI API
+              SectionTitle(
+                title: "Featured Products",
+                press: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FeaturedScreen(),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: defaultPadding),
+
+              /// ✅ INI SUDAH API
+              const MediumCardList(),
+
+              const SizedBox(height: 20),
+
+              /// Banner tetap boleh (UI saja)
+              const PromotionBanner(),
+
+              const SizedBox(height: 20),
+
+              SectionTitle(
+                title: "All Products",
+                press: () {},
+              ),
+
+              const SizedBox(height: 16),
+
+              /// 🔥 API lagi (boleh reuse)
+              const MediumCardList(),
+
+              const SizedBox(height: 30),
             ],
           ),
         ),
