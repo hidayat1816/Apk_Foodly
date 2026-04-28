@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:foodly_ui/screens/onboarding/onboarding_scrreen.dart';
 import 'constants.dart';
+import 'package:provider/provider.dart';
+import 'viewmodels/onboarding_viewmodel.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => OnboardingViewModel(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
