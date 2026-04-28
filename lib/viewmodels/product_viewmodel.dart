@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import '../data/models/product_model.dart';
 import '../data/services/api_service.dart';
 
 class ProductViewModel extends ChangeNotifier {
   final ApiService _api = ApiService();
 
-  List products = [];
+  List<ProductModel> products = [];
   bool isLoading = true;
 
   Future<void> fetchProducts() async {
@@ -15,6 +16,7 @@ class ProductViewModel extends ChangeNotifier {
       products = await _api.getProducts();
     } catch (e) {
       products = [];
+      debugPrint("Error Product: $e");
     } finally {
       isLoading = false;
       notifyListeners();
