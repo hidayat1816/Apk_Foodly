@@ -16,7 +16,7 @@ class SignInScreen extends StatelessWidget {
   Future<void> saveLogin(String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isLogin", true);
-    await prefs.setString("email", email);
+    await prefs.setString("username", email);
   }
 
   @override
@@ -38,7 +38,7 @@ class SignInScreen extends StatelessWidget {
               const WelcomeText(
                 title: "Welcome to",
                 text:
-                    "Enter your Phone number or Email \naddress for sign in. Enjoy your food :)",
+                    "Enter your username and password \n for sign in. Enjoy your food :)",
               ),
 
               /// FORM LOGIN
