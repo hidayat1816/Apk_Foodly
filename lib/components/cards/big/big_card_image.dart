@@ -10,14 +10,38 @@ class BigCardImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
-        image: DecorationImage(
-          // for newtowk image use NetworkImage()
-          image: AssetImage(image),
-          fit: BoxFit.cover,
-        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Image.network(
+        image,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+
+        // 🔥 LOADING (biar tidak kosong)
+        loadingBuilder: (context, child, progress) {
+          if (progress == null) return child;
+          return Container(
+            color: Colors.grey.shade200,
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          );
+        },
+
+        // 🔥 ERROR HANDLER (ini penting banget buat kasus kamu 403)
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey.shade300,
+            child: const Center(
+              child: Icon(
+                Icons.broken_image,
+                size: 40,
+                color: Colors.grey,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
