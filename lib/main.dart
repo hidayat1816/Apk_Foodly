@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodly_ui/viewmodels/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
@@ -21,6 +22,9 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => ProductViewModel(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => AuthViewModel(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -35,12 +39,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Foodly UI',
-
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: primaryColor,
         ),
-
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: primaryColor,
@@ -51,22 +53,16 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-
         textTheme: const TextTheme(
           bodyMedium: TextStyle(color: bodyTextColor),
           bodySmall: TextStyle(color: bodyTextColor),
         ),
-
         inputDecorationTheme: const InputDecorationTheme(
           contentPadding: EdgeInsets.all(defaultPadding),
           hintStyle: TextStyle(color: bodyTextColor),
         ),
       ),
-
-      /// HALAMAN AWAL
       home: const OnboardingScreen(),
-
-      /// 🔥 ROUTE TAMBAHAN
       routes: {
         "/home": (context) => const HomeScreen(),
       },
