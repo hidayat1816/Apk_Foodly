@@ -15,7 +15,10 @@ class ProductModel {
     return ProductModel(
       name: json['name'] ?? '',
       price: json['price'] ?? 0,
-      star: (json['star'] as num).toDouble(),
+
+      // 🔥 FIX DI SINI (lebih aman)
+      star: (json['star'] ?? 0).toDouble(),
+
       image: json['image'] ?? '',
     );
   }
