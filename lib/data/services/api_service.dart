@@ -26,7 +26,7 @@ class ApiService {
         "Content-Type": "application/json",
       },
       body: jsonEncode({
-        "email": email,
+        "username": email,
         "password": password,
       }),
     );
@@ -51,14 +51,20 @@ class ApiService {
     return prefs.getString("token");
   }
 
-  /// 🛒 GET CART
+  /// 🛒 GET CART (SUDAH AMAN)
   Future<List<dynamic>> getCart() async {
     final token = await getToken();
+
+    /// 🔥 HANDLE TOKEN NULL
+    if (token == null) {
+      throw Exception("Token tidak ditemukan, silakan login ulang");
+    }
 
     final response = await http.get(
       Uri.parse("$baseUrl/cart"),
       headers: {
         "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
       },
     );
 
@@ -70,18 +76,24 @@ class ApiService {
     }
   }
 
-  /// 🍔 GET PRODUCTS
+  /// 🍔 GET PRODUCTS (SUDAH AMAN)
   Future<List<ProductModel>> getProducts() async {
     final token = await getToken();
+
+    /// 🔥 HANDLE TOKEN NULL
+    if (token == null) {
+      throw Exception("Token tidak ditemukan, silakan login ulang");
+    }
 
     final response = await http.get(
       Uri.parse("$baseUrl/products"),
       headers: {
         "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
       },
     );
 
-    // 🔥 CEK API DI TERMINAL
+    /// 🔥 DEBUG (boleh hapus nanti)
     print("STATUS API PRODUCT: ${response.statusCode}");
     print("BODY API PRODUCT: ${response.body}");
 
