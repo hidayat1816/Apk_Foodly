@@ -61,21 +61,21 @@ class HomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: defaultPadding),
 
-              /// Banner Welcome
+              /// 🔥 Banner Gambar Tanpa Tulisan
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: defaultPadding,
                 ),
                 child: Container(
-                  height: 150,
+                  height: 160,
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey.shade300,
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Welcome to Foodly 🍔",
-                      style: TextStyle(fontSize: 18),
+                    borderRadius: BorderRadius.circular(18),
+                    image: const DecorationImage(
+                      image: AssetImage(
+                        "assets/images/big_2.png",
+                      ),
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
