@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../constants.dart';
 import '../../../viewmodels/product_viewmodel.dart';
+import '../../../viewmodels/cart_viewmodel.dart';
 
 class MediumCardList extends StatefulWidget {
   const MediumCardList({super.key});
@@ -156,18 +157,39 @@ class _MediumCardListState extends State<MediumCardList> {
                                   ),
                                 ),
 
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius:
-                                        BorderRadius.circular(10),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(6),
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: 18,
+                                GestureDetector(
+                                  onTap: () {
+                                    context
+                                        .read<CartViewModel>()
+                                        .addToCart({
+                                      "name": item.name,
+                                      "price": item.price,
+                                    });
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "${item.name} ditambahkan ke keranjang",
+                                        ),
+                                        duration:
+                                            const Duration(seconds: 1),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius:
+                                          BorderRadius.circular(10),
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(6),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
                                     ),
                                   ),
                                 ),
