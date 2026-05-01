@@ -45,142 +45,151 @@ class DetailsScreen extends StatelessWidget {
           ),
         ],
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// IMAGE
+              /// 🖼️ IMAGE
               ClipRRect(
-                borderRadius:
-                    const BorderRadius.only(
-                  bottomLeft:
-                      Radius.circular(20),
-                  bottomRight:
-                      Radius.circular(20),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
                 ),
                 child: Image.network(
                   product.image,
                   height: 250,
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.image, size: 100),
                 ),
               ),
 
-              const SizedBox(
-                height: defaultPadding,
-              ),
+              const SizedBox(height: defaultPadding),
 
               Padding(
-                padding:
-                    const EdgeInsets.all(
-                  defaultPadding,
-                ),
+                padding: const EdgeInsets.all(defaultPadding),
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// NAME
+                    /// 🍽️ NAME
                     Text(
                       product.name,
-                      style:
-                          const TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
-                        fontWeight:
-                            FontWeight
-                                .bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
 
-                    const SizedBox(
-                        height: 10),
+                    const SizedBox(height: 10),
 
-                    /// STAR
-                    Text(
-                      "⭐ ${product.star}",
-                      style:
-                          const TextStyle(
-                        fontSize: 18,
-                      ),
+                    /// ⭐ RATING + INFO (mirip Foodly)
+                    Row(
+                      children: [
+                        Text("⭐ ${product.star}"),
+                        const SizedBox(width: 10),
+                        const Text("• Free Delivery"),
+                        const SizedBox(width: 10),
+                        const Text("• 25 mins"),
+                      ],
                     ),
 
-                    const SizedBox(
-                        height: 10),
+                    const SizedBox(height: 15),
 
-                    /// PRICE
+                    /// 💰 PRICE
                     Text(
                       "Rp ${product.price}",
-                      style:
-                          const TextStyle(
+                      style: const TextStyle(
                         fontSize: 22,
-                        color:
-                            Colors.orange,
-                        fontWeight:
-                            FontWeight
-                                .bold,
+                        color: Colors.orange,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
 
-                    const SizedBox(
-                        height: 20),
+                    const SizedBox(height: 20),
 
-                    /// DESCRIPTION
+                    /// 📝 DESCRIPTION
                     const Text(
                       "Makanan lezat dengan cita rasa terbaik, cocok untuk menemani harimu.",
-                      style:
-                          TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
-                        color: Colors
-                            .black54,
+                        color: Colors.black54,
                       ),
                     ),
 
-                    const SizedBox(
-                        height: 30),
+                    const SizedBox(height: 30),
 
-                    /// ADD TO CART
+                    /// 🔥 FEATURED ITEMS (pakai product yang sama dulu)
+                    const Text(
+                      "Featured Items",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
                     SizedBox(
-                      width:
-                          double.infinity,
-                      child:
-                          ElevatedButton(
+                      height: 180,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 3, // sementara ulang 3x
+                        itemBuilder: (context, index) {
+                          return Container(
+                            width: 160,
+                            margin: const EdgeInsets.only(right: 12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    product.image,
+                                    height: 100,
+                                    width: 160,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(product.name),
+                                Text("⭐ ${product.star}"),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    /// 🛒 ADD TO CART
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
                         onPressed: () {
-                          final cartVm =
-                              context.read<
-                                  CartViewModel>();
+                          final cartVm = context.read<CartViewModel>();
 
                           cartVm.addToCart({
-                            "name":
-                                product.name,
-                            "price":
-                                product.price,
+                            "name": product.name,
+                            "price": product.price,
                           });
 
-                          ScaffoldMessenger.of(
-                                  context)
-                              .showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text(
-                                "Berhasil masuk cart",
-                              ),
+                              content: Text("Berhasil masuk cart"),
                             ),
                           );
 
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  const CartScreen(),
+                              builder: (_) => const CartScreen(),
                             ),
                           );
                         },
-                        child:
-                            const Text(
-                          "Add To Cart",
-                        ),
+                        child: const Text("Add To Cart"),
                       ),
                     ),
                   ],
