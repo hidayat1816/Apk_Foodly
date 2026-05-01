@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:foodly_ui/viewmodels/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,18 @@ import 'viewmodels/cart_viewmodel.dart';
 import 'viewmodels/product_viewmodel.dart';
 import 'viewmodels/onboarding_viewmodel.dart';
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
+
   runApp(
     MultiProvider(
       providers: [
