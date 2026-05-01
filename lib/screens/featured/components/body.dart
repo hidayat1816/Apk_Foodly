@@ -12,12 +12,10 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-
   @override
   void initState() {
     super.initState();
 
-    // 🔥 FIX cara panggil API
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductViewModel>().fetchProducts();
     });
@@ -28,11 +26,15 @@ class _BodyState extends State<Body> {
     final vm = context.watch<ProductViewModel>();
 
     if (vm.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
     }
 
     if (vm.products.isEmpty) {
-      return const Center(child: Text("Data kosong"));
+      return const Center(
+        child: Text("Data kosong"),
+      );
     }
 
     return SafeArea(
@@ -43,26 +45,68 @@ class _BodyState extends State<Body> {
           final item = vm.products[index];
 
           return Container(
-            margin: const EdgeInsets.only(bottom: defaultPadding),
+            margin: const EdgeInsets.only(bottom: 18),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
               color: Colors.white,
+              borderRadius: BorderRadius.circular(22),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
-                  blurRadius: 12,
-                  offset: const Offset(0, 5),
+                  blurRadius: 15,
+                  spreadRadius: 1,
+                  offset: const Offset(0, 6),
+                  color: Colors.black.withOpacity(0.08),
                 ),
               ],
             ),
-            child: RestaurantInfoBigCard(
-              images: [item.image],
-              name: item.name,
-              rating: item.star, // ✅ FIX
-              numOfRating: 200,
-              deliveryTime: 20,
-              foodType: const ["Food"],
-              press: () {},
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// 🔥 CARD ASLI
+                RestaurantInfoBigCard(
+                  images: [item.image],
+                  name: item.name,
+                  rating: item.star,
+                  numOfRating: 200,
+                  deliveryTime: 20,
+                  foodType: const ["Food"],
+                  press: () {},
+                ),
+
+                /// 🔥 HARGA + TOMBOL
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Rp ${item.price}",
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius:
+                              BorderRadius.circular(12),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(
+                            Icons.add_shopping_cart,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           );
         },
