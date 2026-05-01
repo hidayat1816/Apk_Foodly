@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:foodly_ui/screens/findRestaurants/find_restaurants_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/buttons/socal_button.dart';
@@ -46,7 +47,12 @@ class SignInScreen extends StatelessWidget {
                 onLoginSuccess: (String email) async {
                   await saveLogin(email);
 
-                  Navigator.pushReplacementNamed(context, '/home');
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const FindRestaurantsScreen(),
+                    ),
+                  );
                 },
               ),
 
