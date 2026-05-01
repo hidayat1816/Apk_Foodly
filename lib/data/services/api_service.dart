@@ -51,11 +51,10 @@ class ApiService {
     return prefs.getString("token");
   }
 
-  /// 🛒 GET CART (SUDAH AMAN)
+  /// 🛒 GET CART
   Future<List<dynamic>> getCart() async {
     final token = await getToken();
 
-    /// 🔥 HANDLE TOKEN NULL
     if (token == null) {
       throw Exception("Token tidak ditemukan, silakan login ulang");
     }
@@ -76,11 +75,10 @@ class ApiService {
     }
   }
 
-  /// 🍔 GET PRODUCTS (SUDAH AMAN)
+  /// 🍔 GET PRODUCTS
   Future<List<ProductModel>> getProducts() async {
     final token = await getToken();
 
-    /// 🔥 HANDLE TOKEN NULL
     if (token == null) {
       throw Exception("Token tidak ditemukan, silakan login ulang");
     }
@@ -93,7 +91,6 @@ class ApiService {
       },
     );
 
-    /// 🔥 DEBUG (boleh hapus nanti)
     print("STATUS API PRODUCT: ${response.statusCode}");
     print("BODY API PRODUCT: ${response.body}");
 
@@ -106,5 +103,16 @@ class ApiService {
     } else {
       throw Exception("Failed to load products");
     }
+  }
+
+  // 🔍 🔥 TAMBAHAN UNTUK SEARCH (INI YANG KITA BUTUHKAN)
+  Future<List<ProductModel>> searchProducts(String query) async {
+    // ambil semua dulu
+    final products = await getProducts();
+
+    // filter di sini (client-side search)
+    return products.where((product) {
+      return product.name.toLowerCase().contains(query.toLowerCase());
+    }).toList();
   }
 }
