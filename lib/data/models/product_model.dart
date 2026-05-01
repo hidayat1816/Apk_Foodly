@@ -14,6 +14,7 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
       name: json['name'] ?? '',
+<<<<<<< Updated upstream
 
       // 💰 handle int / string / null
       price: (json['price'] is int)
@@ -26,6 +27,10 @@ class ProductModel {
           : double.tryParse(json['star']?.toString() ?? '0') ?? 0.0,
 
       // 🖼️ image aman
+=======
+      price: json['price'] ?? 0,
+      star: (json['star'] ?? 0).toDouble(),
+>>>>>>> Stashed changes
       image: json['image'] ?? '',
     );
   }
