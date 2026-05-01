@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../findRestaurants/find_restaurants_screen.dart';
 import '../../../constants.dart';
 import '../forgot_password_screen.dart';
 import '../../../viewmodels/auth_viewmodel.dart';
@@ -41,13 +42,13 @@ class _SignInFormState extends State<SignInForm> {
                   }
                   return null;
                 },
-                decoration: const InputDecoration(
-                  hintText: "Username",
-                ),
+                decoration:
+                    const InputDecoration(hintText: "Username"),
               ),
 
               const SizedBox(height: defaultPadding),
 
+              /// PASSWORD
               TextFormField(
                 controller: passwordController,
                 obscureText: _obscureText,
@@ -66,7 +67,9 @@ class _SignInFormState extends State<SignInForm> {
                       });
                     },
                     icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
+                      _obscureText
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                     ),
                   ),
                 ),
@@ -89,11 +92,14 @@ class _SignInFormState extends State<SignInForm> {
 
               const SizedBox(height: defaultPadding),
 
+              /// 🔥 LOGIN BUTTON
               ElevatedButton(
                 onPressed: vm.isLoading
                     ? null
                     : () async {
                         if (_formKey.currentState!.validate()) {
+
+                          /// 🔥 AMBIL & BERSIHKAN INPUT
                           final username = emailController.text.trim();
                           final password = passwordController.text.trim();
 
@@ -105,14 +111,23 @@ class _SignInFormState extends State<SignInForm> {
                           );
 
                           if (success) {
-                            /// ✅ CALLBACK KE SignInScreen
                             widget.onLoginSuccess(username);
+
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    const FindRestaurantsScreen(),
+                              ),
+                              (_) => false,
+                            );
                           } else {
                             print("LOGIN FAILED");
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(vm.error ?? "Login gagal"),
+                                content: Text(
+                                    vm.error ?? "Login gagal"),
                               ),
                             );
                           }
