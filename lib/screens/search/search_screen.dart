@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/cards/big/restaurant_info_big_card.dart';
 import '../../components/scalton/big_card_scalton.dart';
 import '../../constants.dart';
-import '../../demo_data.dart';
+import '../../viewmodels/product_viewmodel.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -14,28 +15,14 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  bool _showSearchResult = false;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-  }
 
-  void showResult() {
-    setState(() {
-      _isLoading = true;
-    });
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        _showSearchResult = true;
-        _isLoading = false;
-      });
+    // 🔥 ambil data dari API saat halaman dibuka
+    Future.microtask(() {
+      context.read<ProductViewModel>().fetchProducts();
     });
   }
 
@@ -51,33 +38,60 @@ class _SearchScreenState extends State<SearchScreen> {
               const SizedBox(height: defaultPadding),
               Text('Search', style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: defaultPadding),
+
+              // 🔍 SEARCH BAR
               const SearchForm(),
+
               const SizedBox(height: defaultPadding),
-              Text(_showSearchResult ? "Search Results" : "Top Restaurants",
+              Text("Search Results",
                   style: Theme.of(context).textTheme.titleLarge),
+
               const SizedBox(height: defaultPadding),
+
+              // 🔥 LIST DATA DARI API
               Expanded(
-                child: ListView.builder(
-                  itemCount: _isLoading ? 2 : 5, //5 is demo length of your data
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(bottom: defaultPadding),
-                    child: _isLoading
-                        ? const BigCardScalton()
-                        : RestaurantInfoBigCard(
-                            // Images are List<String>
-                            images: demoBigImages..shuffle(),
-                            name: "McDonald's",
-                            rating: 4.3,
-                            numOfRating: 200,
-                            deliveryTime: 25,
-                            foodType: const [
-                              "Chinese",
-                              "American",
-                              "Deshi food"
-                            ],
+                child: Consumer<ProductViewModel>(
+                  builder: (context, vm, child) {
+                    // loading
+                    if (vm.isLoading) {
+                      return ListView.builder(
+                        itemCount: 2,
+                        itemBuilder: (context, index) => const Padding(
+                          padding: EdgeInsets.only(bottom: defaultPadding),
+                          child: BigCardScalton(),
+                        ),
+                      );
+                    }
+
+                    // data kosong
+                    if (vm.filteredProducts.isEmpty) {
+                      return const Center(
+                        child: Text("Data tidak ditemukan"),
+                      );
+                    }
+
+                    // data ada
+                    return ListView.builder(
+                      itemCount: vm.filteredProducts.length,
+                      itemBuilder: (context, index) {
+                        final product = vm.filteredProducts[index];
+
+                        return Padding(
+                          padding:
+                              const EdgeInsets.only(bottom: defaultPadding),
+                          child: RestaurantInfoBigCard(
+                            images: [product.image], // dari API
+                            name: product.name,
+                            rating: product.star,
+                            numOfRating: 100,
+                            deliveryTime: 20,
+                            foodType: const ["Food"],
                             press: () {},
                           ),
-                  ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ],
@@ -88,46 +102,28 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-class SearchForm extends StatefulWidget {
+class SearchForm extends StatelessWidget {
   const SearchForm({super.key});
 
   @override
-  State<SearchForm> createState() => _SearchFormState();
-}
-
-class _SearchFormState extends State<SearchForm> {
-  final _formKey = GlobalKey<FormState>();
-  @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: TextFormField(
-        onChanged: (value) {
-          // get data while typing
-          // if (value.length >= 3) showResult();
-        },
-        onFieldSubmitted: (value) {
-          if (_formKey.currentState!.validate()) {
-            // If all data are correct then save data to out variables
-            _formKey.currentState!.save();
-
-            // Once user pree on submit
-          } else {}
-        },
-        validator: requiredValidator.call,
-        style: Theme.of(context).textTheme.labelLarge,
-        textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
-          hintText: "Search on foodly",
-          contentPadding: kTextFieldPadding,
-          prefixIcon: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SvgPicture.asset(
-              'assets/icons/search.svg',
-              colorFilter: const ColorFilter.mode(
-                bodyTextColor,
-                BlendMode.srcIn,
-              ),
+    return TextFormField(
+      onChanged: (value) {
+        // 🔥 langsung search dari ViewModel
+        context.read<ProductViewModel>().searchProduct(value);
+      },
+      style: Theme.of(context).textTheme.labelLarge,
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+        hintText: "Search food...",
+        contentPadding: kTextFieldPadding,
+        prefixIcon: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SvgPicture.asset(
+            'assets/icons/search.svg',
+            colorFilter: const ColorFilter.mode(
+              bodyTextColor,
+              BlendMode.srcIn,
             ),
           ),
         ),
