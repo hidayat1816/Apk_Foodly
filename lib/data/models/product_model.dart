@@ -14,11 +14,18 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
       name: json['name'] ?? '',
-      price: json['price'] ?? 0,
 
-      // 🔥 FIX DI SINI (lebih aman)
-      star: (json['star'] ?? 0).toDouble(),
+      // 💰 handle int / string / null
+      price: (json['price'] is int)
+          ? json['price']
+          : int.tryParse(json['price']?.toString() ?? '0') ?? 0,
 
+      // ⭐ handle int / double / null
+      star: (json['star'] is num)
+          ? (json['star'] as num).toDouble()
+          : double.tryParse(json['star']?.toString() ?? '0') ?? 0.0,
+
+      // 🖼️ image aman
       image: json['image'] ?? '',
     );
   }
