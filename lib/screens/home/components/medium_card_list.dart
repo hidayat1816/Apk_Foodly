@@ -49,7 +49,6 @@ class _MediumCardListState extends State<MediumCardList> {
             itemBuilder: (context, index) {
               final item = vm.filteredProducts[index];
 
-              /// ✅ LANGSUNG PAKAI (tanpa null check kalau non-nullable)
               final imageUrl = item.image.isNotEmpty
                   ? item.image
                   : "https://via.placeholder.com/150";
@@ -92,20 +91,17 @@ class _MediumCardListState extends State<MediumCardList> {
                           height: 135,
                           width: double.infinity,
                           fit: BoxFit.cover,
-                          loadingBuilder:
-                              (context, child, progress) {
+                          loadingBuilder: (context, child, progress) {
                             if (progress == null) return child;
 
                             return const SizedBox(
                               height: 135,
                               child: Center(
-                                child:
-                                    CircularProgressIndicator(),
+                                child: CircularProgressIndicator(),
                               ),
                             );
                           },
-                          errorBuilder:
-                              (context, error, stackTrace) {
+                          errorBuilder: (context, error, stackTrace) {
                             return Container(
                               height: 135,
                               color: Colors.grey.shade200,
@@ -125,19 +121,16 @@ class _MediumCardListState extends State<MediumCardList> {
                         child: Padding(
                           padding: const EdgeInsets.all(12),
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               /// 📝 Nama
                               Text(
                                 item.name,
                                 maxLines: 1,
-                                overflow:
-                                    TextOverflow.ellipsis,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 16,
-                                  fontWeight:
-                                      FontWeight.bold,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
 
@@ -154,10 +147,8 @@ class _MediumCardListState extends State<MediumCardList> {
                                   const SizedBox(width: 4),
                                   Text(
                                     item.star.toString(),
-                                    style:
-                                        const TextStyle(
-                                      fontWeight:
-                                          FontWeight.w500,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ],
@@ -168,63 +159,51 @@ class _MediumCardListState extends State<MediumCardList> {
                               /// 💰 Harga + Tombol
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Rp ${item.price}",
-                                    style:
-                                        const TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.green,
-                                      fontWeight:
-                                          FontWeight.bold,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 15,
                                     ),
                                   ),
 
+                                  /// 🔥 TOMBOL TAMBAH KE CART (SUDAH FIX)
                                   GestureDetector(
                                     onTap: () {
                                       context
-                                          .read<
-                                              CartViewModel>()
+                                          .read<CartViewModel>()
                                           .addToCart({
                                         "name": item.name,
                                         "price": item.price,
+                                        "image": item.image,
+                                        "star": item.star,
                                       });
 
-                                      ScaffoldMessenger.of(
-                                              context)
+                                      ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(
                                           content: Text(
                                             "${item.name} ditambahkan ke keranjang",
                                           ),
                                           duration:
-                                              const Duration(
-                                                  seconds:
-                                                      1),
+                                              const Duration(seconds: 1),
                                         ),
                                       );
                                     },
                                     child: Container(
-                                      decoration:
-                                          BoxDecoration(
-                                        color:
-                                            Colors.green,
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
                                         borderRadius:
-                                            BorderRadius
-                                                .circular(
-                                                    10),
+                                            BorderRadius.circular(10),
                                       ),
-                                      child:
-                                          const Padding(
-                                        padding:
-                                            EdgeInsets.all(
-                                                6),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(6),
                                         child: Icon(
                                           Icons.add,
-                                          color:
-                                              Colors.white,
+                                          color: Colors.white,
                                           size: 18,
                                         ),
                                       ),
