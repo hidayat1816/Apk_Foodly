@@ -28,9 +28,12 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => OnboardingViewModel(),
         ),
+
+        /// 🔥 INI YANG DIPERBAIKI
         ChangeNotifierProvider(
-          create: (_) => CartViewModel(),
+          create: (_) => cartVM, // ✅ PAKAI GLOBAL INSTANCE
         ),
+
         ChangeNotifierProvider(
           create: (_) => ProductViewModel(),
         ),
