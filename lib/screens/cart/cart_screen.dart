@@ -16,10 +16,14 @@ class _CartScreenState
   void initState() {
     super.initState();
 
+    /// 🔥 hanya ambil API jika cart masih kosong
     Future.microtask(() {
-      context
-          .read<CartViewModel>()
-          .fetchCart();
+      final vm =
+          context.read<CartViewModel>();
+
+      if (vm.cartItems.isEmpty) {
+        vm.fetchCart();
+      }
     });
   }
 
