@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/section_title.dart';
 import '../../constants.dart';
 import '../../screens/filter/filter_screen.dart';
+import '../../screens/cart/cart_screen.dart'; // 🔥 IMPORT CART
 import '../featured/featurred_screen.dart';
 import 'components/medium_card_list.dart';
 import 'components/promotion_banner.dart';
@@ -35,7 +36,23 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+
+        /// 🔥 ACTIONS (CART + FILTER)
         actions: [
+          /// 🛒 CART
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CartScreen(),
+                ),
+              );
+            },
+          ),
+
+          /// FILTER
           TextButton(
             onPressed: () {
               Navigator.push(
@@ -61,7 +78,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: defaultPadding),
 
-              /// 🔥 Banner Gambar Tanpa Tulisan
+              /// 🔥 Banner
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: defaultPadding,
